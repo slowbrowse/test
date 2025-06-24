@@ -1,0 +1,38 @@
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: set-matrix
+        run: |
+          files=$(find . -type f -name '*.ps1' | jq -R -s -c 'split("\n")[:-1]')
+          echo "matrix=$files" >> $GITHUB_OUTPUT
+
+  sign:
+    needs: prepare
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        file: ${{ fromJson(needs.prepare.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Sign ${{ matrix.file }}
+        uses: azure/trusted-signing-action@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          resource-group: ${{ secrets.SIGNING_RESOURCE_GROUP }}
+          signing-account: ${{ secrets.SIGNING_ACCOUNT_NAME }}
+          signing-profile: ${{ secrets.SIGNING_PROFILE_NAME }}
+          input-path: ${{ matrix.file }}
+          output-path: signed-${{ matrix.file }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: signed-scripts
+          path: signed-${{ matrix.file }}
