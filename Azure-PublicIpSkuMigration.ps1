@@ -7,3 +7,4 @@ Start-VMPublicIPUpgrade -VMName 'xtdev02-vm' -ResourceGroupName 'xtdev-rg' -What
 
 Start-VMPublicIPUpgrade -VMName 'xtdev01-vm' -ResourceGroupName 'xtdev-rg'
 Start-VMPublicIPUpgrade -VMName 'xtdev02-vm' -ResourceGroupName 'xtdev-rg'
+# Test
