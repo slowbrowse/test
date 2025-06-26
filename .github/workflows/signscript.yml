@@ -17,7 +17,7 @@ jobs:
           echo "scripts=$(find . -type f -name '*.ps1' | paste -sd ' ' -)" >> $GITHUB_OUTPUT
 
       - name: Sign each script
-        uses: azure/trusted-signing-action@v1
+        uses: azure/trusted-signing-action@v0
         with:
           azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
