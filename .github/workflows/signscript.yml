@@ -1,0 +1,36 @@
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-sign:
+    runs-on: windows-latest
+    name: Build app and sign files with Trusted Signing
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Sign files with Trusted Signing
+        uses: azure/trusted-signing-action@v0
+        with:
+          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          azure-client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+          endpoint: https://eus.codesigning.azure.net/
+          trusted-signing-account-name: ${{ secrets.SIGNING_PROFILE_NAME }}
+          certificate-profile-name: ${{ secrets.SIGNING_ACCOUNT_NAME }}
+          files-folder: ${{ github.workspace }}\
+          files-folder-filter: ps1
+          file-digest: SHA256
+          timestamp-rfc3161: http://timestamp.acs.microsoft.com
+          timestamp-digest: SHA256
+          exclude-environment-credential: false
+          exclude-workload-identity-credential: true
+          exclude-managed-identity-credential: true
+          exclude-shared-token-cache-credential: true
+          exclude-visual-studio-credential: true
+          exclude-visual-studio-code-credential: true
+          exclude-azure-cli-credential: true
+          exclude-azure-powershell-credential: true
+          exclude-azure-developer-cli-credential: true
+          exclude-interactive-browser-credential: true
