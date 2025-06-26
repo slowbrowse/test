@@ -1,17 +1,23 @@
 on:
   push:
-    branches: [main]
+    paths:
+      - '**/*.ps1'
 
 jobs:
-  build-and-sign:
-    runs-on: windows-latest
-    name: Build app and sign files with Trusted Signing
+  sign-scripts:
+    runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Sign files with Trusted Signing
-        uses: azure/trusted-signing-action@v0
+      - name: Find PowerShell scripts
+        id: find-scripts
+        run: |
+          echo "scripts=$(find . -type f -name '*.ps1' | paste -sd ' ' -)" >> $GITHUB_OUTPUT
+
+      - name: Sign each script
+        uses: azure/trusted-signing-action@v1
         with:
           azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
@@ -34,3 +40,9 @@ jobs:
           exclude-azure-powershell-credential: true
           exclude-azure-developer-cli-credential: true
           exclude-interactive-browser-credential: true
+
+      - name: Upload signed scripts
+        uses: actions/upload-artifact@v4
+        with:
+          name: signed-scripts
+          path: signed-*.ps1
