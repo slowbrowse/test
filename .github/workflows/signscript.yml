@@ -4,27 +4,28 @@ on:
   push:
     paths:
       - '**/*.ps1'
-      
-runs:
-    using: composite
-    steps:
-        - name: Sign script with Trusted Signing
-          uses: azure/trusted-signing-action@v0.4.0
-          with:
-              azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-              azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
-              azure-client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
-              endpoint: https://weu.codesigning.azure.net/
-              trusted-signing-account-name: wwg-codesigning
-              certificate-profile-name: WoodWingGroupHolding
-              files-folder-filter: ps1
-              file-digest: SHA256
-              timestamp-rfc3161: http://timestamp.acs.microsoft.com
-              timestamp-digest: SHA256
 
-        - name: Upload signed script
-          uses: actions/upload-artifact@v4
-          with:
-              retention-days: 7
-              name: signed-scripts
-              path: signed-*.ps1
+jobs:
+    runs:
+        using: composite
+        steps:
+            - name: Sign script with Trusted Signing
+              uses: azure/trusted-signing-action@v0.4.0
+              with:
+                  azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+                  azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+                  azure-client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+                  endpoint: https://weu.codesigning.azure.net/
+                  trusted-signing-account-name: wwg-codesigning
+                  certificate-profile-name: WoodWingGroupHolding
+                  files-folder-filter: ps1
+                  file-digest: SHA256
+                  timestamp-rfc3161: http://timestamp.acs.microsoft.com
+                  timestamp-digest: SHA256
+
+            - name: Upload signed script
+              uses: actions/upload-artifact@v4
+              with:
+                  retention-days: 7
+                  name: signed-scripts
+                  path: signed-*.ps1
