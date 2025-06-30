@@ -1,4 +1,10 @@
 name: Sign PowerShell script
+
+on:
+  push:
+    paths:
+      - '**/*.ps1'
+      
 runs:
     using: composite
     steps:
