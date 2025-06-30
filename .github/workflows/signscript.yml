@@ -20,7 +20,7 @@ jobs:
           endpoint: https://weu.codesigning.azure.net/
           trusted-signing-account-name: wwg-codesigning
           certificate-profile-name: WoodWingGroupHolding
-          files-folder: ${{ github.workspace }}\
+          files-folder: .\
           files-folder-filter: ps1
           file-digest: SHA256
           timestamp-rfc3161: http://timestamp.acs.microsoft.com
