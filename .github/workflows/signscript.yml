@@ -5,7 +5,7 @@ on:
 
 jobs:
   sign-script:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     name: Sign PS script with Trusted Signing
     steps:
       - name: Checkout
