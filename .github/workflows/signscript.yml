@@ -29,7 +29,7 @@ jobs:
       - name: Upload signed script
         uses: actions/upload-artifact@v4
         with:
-          retention-days: 7
-          name: signed-script.ps1
-          path: signed
+          retention-days: 1
+          name: signed-script
+          path: '**/*.ps1'
 
