@@ -31,4 +31,5 @@ jobs:
         with:
           retention-days: 7
           name: signed-scripts
-          path: signed-*.ps1
+          path: signed/signed-*.ps1
+
