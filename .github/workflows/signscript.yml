@@ -6,30 +6,29 @@ on:
 jobs:
   sign-script:
     runs-on: windows-latest
-    name: Sign PS script with Trusted Signing
+    name: Sign PS script with Artifact Signing
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Sign files with Trusted Signing
-        uses: azure/trusted-signing-action@v0.4.0
+      - name: Sign files with Artifact Signing
+        uses: azure/artifact-signing-action@v2
         with:
           azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
           azure-client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
           endpoint: https://weu.codesigning.azure.net/
-          trusted-signing-account-name: ${{ secrets.AZURE_SIGNING_ACCOUNT }}
-          certificate-profile-name: ${{ secrets.AZURE_CERT_PROFILE }}
+          signing-account-name: ${{ secrets.SIGNING_ACCOUNT_NAME }}
+          certificate-profile-name: ${{ secrets.SIGNING_PROFILE_NAME }}
           files-folder: .\
           files-folder-filter: ps1
           file-digest: SHA256
           timestamp-rfc3161: http://timestamp.acs.microsoft.com
           timestamp-digest: SHA256
-          
+
       - name: Upload signed script
         uses: actions/upload-artifact@v4
         with:
           retention-days: 1
           name: signed-script
           path: '**/*.ps1'
-
